@@ -10,6 +10,8 @@ public class LightCycleController : MonoBehaviour
     private bool engineStarted = false;
     private Rigidbody rb;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,13 +25,22 @@ public class LightCycleController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Engine Starting!");
-                rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Acceleration);
-                engineStarted = true;
+
             }
         }
         else {
             rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Force);
+        }
+    }
+
+    public void StartEngine()
+    {
+        if (!engineStarted)
+        {
+            Debug.Log("Engine Starting!");
+
+            rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Acceleration);
+            engineStarted = true;
         }
     }
 }
