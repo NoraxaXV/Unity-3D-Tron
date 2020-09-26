@@ -2,45 +2,52 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
-public class LightCycleController : MonoBehaviour
+namespace Tron
 {
-    [SerializeField] private float speed = 100;
-    private bool engineStarted = false;
-    private Rigidbody rb;
-
-    
-
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(Rigidbody))]
+    public class LightCycleController : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-    }
+        [SerializeField] private float speed = 100;
+        public InputController controls;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!engineStarted)
+        private bool engineStarted = false;
+        private Rigidbody rb;
+
+
+
+        // Start is called before the first frame update
+        void Start()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
+            rb = GetComponent<Rigidbody>();
 
+            controls = new InputController();
+            controls.Enable();
+            controls.Player.StartEngine.performed += StartEngine;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!engineStarted)
+            {
+            }
+            else
+            {
+                rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Force);
             }
         }
-        else {
-            rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Force);
-        }
-    }
 
-    public void StartEngine()
-    {
-        if (!engineStarted)
+        public void StartEngine(InputAction.CallbackContext ctx)
         {
-            Debug.Log("Engine Starting!");
+            if (!engineStarted)
+            {
+                Debug.Log("Engine Starting!");
 
-            rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Acceleration);
-            engineStarted = true;
+                rb.AddRelativeForce(Vector3.forward * speed, ForceMode.Acceleration);
+                engineStarted = true;
+            }
         }
     }
 }
