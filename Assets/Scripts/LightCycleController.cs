@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Tron
@@ -12,59 +11,49 @@ namespace Tron
         public InputController controls;
 
 
-        private Rigidbody rb;
-
-        [SerializeField] private float _maxVelocity = 100;
-        [SerializeField] private float _acceleration = 100;
-
-        private Vector3 _currentDirection = new Vector3();
+        [SerializeField] private float _maxVelocity = 10;
         private bool _engineStarted = false;
+        private Rigidbody _rb;
 
         // Start is called before the first frame update
         void Start()
         {
-            rb = GetComponent<Rigidbody>();
+            _rb = GetComponent<Rigidbody>();
+            _rb.drag = 0;
 
             controls = new InputController();
             controls.Enable();
-            controls.Player.StartEngine.performed += StartEngine;
-            controls.Player.Turn.performed += TurnCycle;
+            controls.Player.StartEngine.performed += OnInputStart;
+            controls.Player.Turn.performed += OnInputTurn;
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            if (_engineStarted)
-            {
-                if (rb.velocity.sqrMagnitude < _maxVelocity*_maxVelocity)
-                {
-                    rb.velocity +=  _currentDirection * _acceleration * Time.deltaTime;
-                }
-
-            }
-        }
-
-        public void StartEngine(InputAction.CallbackContext ctx)
+        public void OnInputStart(InputAction.CallbackContext ctx)
         {
             if (!_engineStarted)
             {
                 Debug.Log("Engine Starting!");
-
-                _currentDirection = transform.forward;
-                transform.forward = _currentDirection;
-
                 _engineStarted = true;
+                UpdateVelocity();
             }
         }
 
-        public void TurnCycle(InputAction.CallbackContext ctx)
+        public void OnInputTurn(InputAction.CallbackContext ctx)
         {
             if (!_engineStarted) return;
             var value = ctx.action.ReadValue<float>();
-            transform.RotateAround(transform.localToWorldMatrix*rb.centerOfMass, transform.up, 90);
-            rb.velocity = new Vector3();
-            _currentDirection = transform.forward;
+            Turn(value);
+        }
+
+        void Turn(float value)
+        {
+            transform.Rotate(0, 90 * value, 0);
+            UpdateVelocity();
+        }
+
+        void UpdateVelocity()
+        {
+            _rb.velocity = transform.forward * _maxVelocity;
         }
 
     }
