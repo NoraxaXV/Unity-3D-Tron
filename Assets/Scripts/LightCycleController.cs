@@ -19,7 +19,7 @@ namespace Tron
         void Start()
         {
             _rb = GetComponent<Rigidbody>();
-            _rb.drag = 0;
+            _rb.maxAngularVelocity = 0;
 
             controls = new InputController();
             controls.Enable();

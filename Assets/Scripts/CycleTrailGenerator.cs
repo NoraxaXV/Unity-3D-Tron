@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Tron
 {
+
+
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
     public class CycleTrailGenerator : MonoBehaviour
     {
@@ -13,7 +15,7 @@ namespace Tron
 
         public float trailWidth = 2.0f;
         public float trailHeight = 5.0f;
-        public float dissolveSpeed = 3.0f;
+        [Range(0, 1)] public float dissolveSpeed = 3.0f;
         public float detailConstant = 3.0f;
 
         private bool _updateTrail = true;
@@ -28,16 +30,6 @@ namespace Tron
 
         private float _trailCount = 0;
 
-        private Vector3 TopVert => new Vector3(
-                emissionCenter.position.x,
-                emissionCenter.position.y + trailWidth / 2,
-                emissionCenter.position.z
-            );
-        private Vector3 BottomVert => new Vector3(
-                        emissionCenter.position.x,
-                        emissionCenter.position.y - trailWidth / 2,
-                        emissionCenter.position.z
-                    );
 
         // private BoxCollider[] colliders;
 
@@ -51,14 +43,21 @@ namespace Tron
 
             _verts = new List<Vector3>()
             {
-                TopVert,
-                BottomVert
+                GetTopVertex(),
+                GetBottomVertex()
             };
             _tris = new List<int>();
 
+            
 
             _filter.sharedMesh = _trail;
             _renderer.sharedMaterial = trailMat;
+            _collider.sharedMesh = _trail;
+
+            _trail.vertices = _verts.ToArray();
+            _trail.triangles = _tris.ToArray();
+
+            CutTrail(_verts[0], _verts[1]);
         }
 
         private void Update()
@@ -66,14 +65,24 @@ namespace Tron
             if (_updateTrail) UpdateTrail();
         }
 
+        Vector3 GetTopVertex() => new Vector3(
+                emissionCenter.position.x,
+                emissionCenter.position.y + trailHeight / 2,
+                emissionCenter.position.z
+            );
 
-
+        Vector3 GetBottomVertex() => new Vector3(
+                        emissionCenter.position.x,
+                        emissionCenter.position.y - trailHeight / 2,
+                        emissionCenter.position.z
+                    );
         public void UpdateTrail()
         {
-            var bottom = BottomVert;
-            var top = TopVert;
+            var bottom = GetBottomVertex();
+            var top = GetTopVertex();
+
             if (Vector3.Distance(top, _verts[_verts.Count - 1]) <= 0.01) return;
-            
+
             _trailCount += Time.deltaTime;
             float curveTime = GetCurveTime(bottom);
 
@@ -87,30 +96,29 @@ namespace Tron
                 ExtendTrail(top, bottom);
             }
 
-            _trail.vertices = _verts.ToArray();
-            if (_tris.Count >= 3)
-            {
-                _trail.triangles = _tris.ToArray();
-                _trail.RecalculateNormals();
-            }
-
-
-            }
+            _collider.sharedMesh = _trail;
+        }
 
         private void ExtendTrail(Vector3 top, Vector3 bottom)
         {
             _verts[_verts.Count - 1] = bottom;
             _verts[_verts.Count - 2] = top;
+            _trail.vertices = _verts.ToArray();
+
+            _trail.RecalculateNormals();
+            _trail.RecalculateBounds();
+            
         }
 
         private void CutTrail(Vector3 top, Vector3 bottom)
         {
             _verts.Add(top);
             _verts.Add(bottom);
-            if (_verts.Count < 3) return;
+
+            _trail.vertices = _verts.ToArray();
 
             // First Face
-            var c = _verts.Count;
+            var c = _verts.Count - 1;
             _tris.Add(c);
             _tris.Add(c - 3);
             _tris.Add(c - 1);
@@ -119,6 +127,12 @@ namespace Tron
             _tris.Add(c);
             _tris.Add(c - 2);
             _tris.Add(c - 3);
+
+            _trail.triangles = _tris.ToArray();
+
+            _trail.RecalculateNormals();
+            _trail.RecalculateBounds();
+
         }
 
         private float GetCurveTime(Vector3 newBottomPoint)
@@ -136,6 +150,26 @@ namespace Tron
             if (angle == 0) angle = 0.001f; // Prevent DivideByZero ex
 
             return detailConstant / angle;
+        }
+
+        // WIP
+        private void LerpTrail(int index)
+        {
+            _verts[index] = Vector3.Lerp(_verts[index], _verts[index + 2], dissolveSpeed * Time.deltaTime);
+            _verts[index + 1] = Vector3.Lerp(_verts[index + 1], _verts[index + 3], dissolveSpeed * Time.deltaTime);
+
+            // Merge the two points if they are too close
+            if (Vector3.Distance(_verts[index], _verts[index + 2]) <= 0.01 || Vector3.Distance(_verts[index + 1], _verts[index + 3]) <= 0.01)
+            {
+                _verts.Remove(_verts[index]);
+                _verts.Remove(_verts[index + 1]);
+
+                foreach (var i in _tris.FindAll((int i) => i == index))
+                {
+
+                }
+            }
+
         }
 
     }
