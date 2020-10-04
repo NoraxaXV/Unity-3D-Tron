@@ -30,9 +30,9 @@ namespace Tron
                 },
                 {
                     ""name"": ""Turn"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""2f00801e-2766-4778-b31e-87344fb6cec2"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -50,8 +50,30 @@ namespace Tron
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": """",
+                    ""id"": ""4f797710-adbd-4083-8f87-00aab9d2f719"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""StartEngine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc344335-2e7e-422b-b89d-bbf4f95c9bd0"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""1D Axis"",
-                    ""id"": ""b3a28be6-71af-42ae-80df-4a9b919a87f3"",
+                    ""id"": ""2e92b5b1-cc73-48f7-9cef-890415933f3e"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -62,22 +84,22 @@ namespace Tron
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""73264c2a-e7c1-4939-b59f-8cf88d19882b"",
+                    ""id"": ""7c0a3427-3f41-4b7a-bc2c-9997eb2a2fb0"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""a6b605bf-fe75-4e73-8ff3-e5c56f4f7ec0"",
+                    ""id"": ""82e2d9a6-3316-48cf-b7d8-f0fd566622fd"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true

@@ -8,8 +8,6 @@ namespace Tron
     [RequireComponent(typeof(Rigidbody))]
     public class LightCycleController : MonoBehaviour
     {
-        public InputController controls;
-
 
         [SerializeField] private float _maxVelocity = 10;
         private bool _engineStarted = false;
@@ -21,10 +19,10 @@ namespace Tron
             _rb = GetComponent<Rigidbody>();
             _rb.maxAngularVelocity = 0;
 
-            controls = new InputController();
-            controls.Enable();
-            controls.Player.StartEngine.performed += OnInputStart;
-            controls.Player.Turn.performed += OnInputTurn;
+            // controls = new InputController();
+            // controls.Enable();
+            // controls.Player.StartEngine.performed += OnInputStart;
+            // controls.Player.Turn.performed += OnInputTurn;
 
         }
 
@@ -40,8 +38,10 @@ namespace Tron
 
         public void OnInputTurn(InputAction.CallbackContext ctx)
         {
-            if (!_engineStarted) return;
+            if (!_engineStarted || ctx.phase != InputActionPhase.Performed) return;
+
             var value = ctx.action.ReadValue<float>();
+            Debug.Log("Turning, value = " + value.ToString() + ", ctx = " + ctx.ToString());
             Turn(value);
         }
 

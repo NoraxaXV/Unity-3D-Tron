@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Tron
 {
@@ -30,6 +31,8 @@ namespace Tron
 
         private float _trailCount = 0;
 
+        public UnityEvent<Collision> onTriggerTrail;
+
 
         // private BoxCollider[] colliders;
 
@@ -40,11 +43,13 @@ namespace Tron
             _collider = GetComponent<MeshCollider>();
 
             _trail = new Mesh();
+            var top = GetTopVertex();
+            var bottom = GetBottomVertex();
 
             _verts = new List<Vector3>()
             {
-                GetTopVertex(),
-                GetBottomVertex()
+                new Vector3(top.x, top.y, top.z-0.01f),
+                new Vector3(bottom.x, bottom.y, bottom.z-0.01f)
             };
             _tris = new List<int>();
 
@@ -104,10 +109,6 @@ namespace Tron
             _verts[_verts.Count - 1] = bottom;
             _verts[_verts.Count - 2] = top;
             _trail.vertices = _verts.ToArray();
-
-            _trail.RecalculateNormals();
-            _trail.RecalculateBounds();
-            
         }
 
         private void CutTrail(Vector3 top, Vector3 bottom)
@@ -169,8 +170,11 @@ namespace Tron
 
                 }
             }
-
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            onTriggerTrail.Invoke(collision);
+        }
     }
 }
