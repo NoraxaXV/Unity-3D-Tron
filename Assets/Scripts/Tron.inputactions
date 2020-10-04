@@ -46,18 +46,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "bc344335-2e7e-422b-b89d-bbf4f95c9bd0",
-                    "path": "<Gamepad>/leftStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Turn",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "1D Axis",
+                    "name": "Keyboard",
                     "id": "2e92b5b1-cc73-48f7-9cef-890415933f3e",
                     "path": "1DAxis",
                     "interactions": "",
@@ -85,6 +74,39 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "8acd67ae-4f55-4056-a128-3e4b423e8545",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "53e1c2b7-dbac-4589-b554-eaa7f7bc5f27",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "af9c4c46-fa53-459e-b5f0-e98e85cd5fed",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Turn",
                     "isComposite": false,
                     "isPartOfComposite": true

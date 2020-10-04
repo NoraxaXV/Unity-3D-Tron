@@ -11,13 +11,13 @@ namespace Tron
 
         [SerializeField] private float _maxVelocity = 10;
         private bool _engineStarted = false;
-        private Rigidbody _rb;
+        public Rigidbody Rigidbody { get; private set; }
 
         // Start is called before the first frame update
         void Start()
         {
-            _rb = GetComponent<Rigidbody>();
-            _rb.maxAngularVelocity = 0;
+            Rigidbody = GetComponent<Rigidbody>();
+            Rigidbody.maxAngularVelocity = 0;
 
             // controls = new InputController();
             // controls.Enable();
@@ -53,7 +53,8 @@ namespace Tron
 
         void UpdateVelocity()
         {
-            _rb.velocity = transform.forward * _maxVelocity;
+            if (Rigidbody == null) throw new MissingReferenceException("Rigidbody is null!");
+            Rigidbody.velocity = transform.forward * _maxVelocity;
         }
 
     }

@@ -31,7 +31,7 @@ namespace Tron
 
         private float _trailCount = 0;
 
-        public UnityEvent<Collision> onTriggerTrail;
+        public UnityEvent<Collision, GameObject> onTriggerTrail;
 
 
         // private BoxCollider[] colliders;
@@ -53,7 +53,7 @@ namespace Tron
             };
             _tris = new List<int>();
 
-            
+
 
             _filter.sharedMesh = _trail;
             _renderer.sharedMaterial = trailMat;
@@ -174,7 +174,7 @@ namespace Tron
 
         private void OnCollisionEnter(Collision collision)
         {
-            onTriggerTrail.Invoke(collision);
+            onTriggerTrail.Invoke(collision, gameObject);
         }
     }
 }
